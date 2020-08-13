@@ -1,0 +1,26 @@
+#%RAML 1.0 DataType
+type: object
+## Documentation about FxRates https://docs.oracle.com/cd/A60725_05/html/comnls/us/gl/ratetype.htm
+## https://docs.oracle.com/en/cloud/saas/supply-chain-management/18b/faicf/define-currencies-and-currency-rates.html#FAICF1917618
+properties:
+  currencyFrom: 
+    type: string
+    required: false
+    description: Currency to be converted
+  currencyTo: 
+    type: string
+    required: false
+    description: Currency to be converted into
+  conversionRate: 
+    type: number
+    required: false
+    description: Conversion rate
+  conversionRateType: 
+    type: string
+    enum: ["Corporate"]
+    required: false    
+    description: Use conversion rate types to automatically assign a rate when you convert foreign currency journal amounts to functional currency equivalents
+  conversionDate: 
+    type: date-only
+    required: false
+    description: Date of conversion

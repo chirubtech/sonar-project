@@ -1,0 +1,48 @@
+#%RAML 1.0
+baseUri: https://anypoint.mulesoft.com/mocking/api/v1/links/657e83e6-882e-4118-a57a-2277ed44b334/ # 
+version: v1
+title: Foreign Exchange Rates Period Summary API
+
+types:
+  foreignExchangeRates: !include types/fx-rate.raml
+  page: !include types/fx-rates-page.raml
+
+traits:
+  client-credentials-traits: !include exchange_modules/86af9f35-22dc-46b9-a626-609904112ea1/sfdc-ei-trait/1.0.1/client-credentials.raml
+  error-responses: !include exchange_modules/86af9f35-22dc-46b9-a626-609904112ea1/sfdc-ei-trait/1.0.1/error-response.raml
+
+/fxRates:
+  description: Foreign exchange rate compares one currency with another to show their relative values. Here in this API we are considering base currency is "USD" and the conversion type is "Corporate"
+  is:
+    - client-credentials-traits
+    - error-responses
+  get:
+    description: This endpoint will be used to get the initial page of FxRates. Response also contains information about next page, from where user can get next page. If the consumer wants the data of a particular date, then need to pass the "conversionDate" query parameter, otherwise API will return the current system date data as response.
+    queryParameters:
+      conversionDate:
+          description: It should be specified when specific date data is required and it should be in "yyyy-MM-DD" format.
+          type: date-only
+          required: false
+          example: 2019-03-15
+      limit:
+        description: Number of records retrived per page. This parameter will be provided to override default value.
+        type: integer
+        required: false
+        maximum: 10000
+        default: 10000
+      pageToken:
+        description: Token to specify the next page in the list. It will be sent in previous page response. from the second page onwards this pagetoken is required to get the response.
+        type: string
+        required: false
+    responses:
+      200:
+        description: Response to consumer with initial page, it also contains information about next page, from where user can get next page.
+        body:
+          application/json:
+            type: page
+            example:
+              !include examples/page-response.raml
+        headers:
+          x-transaction-id:
+            type: string
+            example: 491e23ae-ji2l-496d-b05a-575d7db3c358
